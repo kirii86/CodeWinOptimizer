@@ -220,6 +220,16 @@ Output: `build/bin/CodeWinOptimizer.exe`
 
 ### Completed
 
+**v1.3.0 — Windows 11 Fluent redesign**
+
+- [x] Full redesign to **Windows 11 Fluent dark**: Segoe UI Variable, flat charcoal surfaces, 4/8px radii, single accent (logo green `#39ff14`)
+- [x] Removed emoji, gradients, glows and colored side borders — monochrome 1.7px line icons instead
+- [x] Tweaks tab reorganized as a two-panel **master-detail** nav with All/category views, live search and per-category select-all
+- [x] Apps / Startup / Monitor rebuilt on Fluent list rows, drawn SVG checkboxes, `scaleX` gauges (no layout thrash)
+- [x] New top-nav tab strip (Windows 11 style), 40px titlebar, Win 11 toggle switches
+- [x] Collapsible terminal rail and per-tab scroll containers
+- [x] Design system documented in `DESIGN.md`
+
 **v1.2.3 — Startup Manager + Impact Dashboard**
 
 - [x] New **Inicio** tab — Startup Manager listing every auto-start entry: Run keys (HKLM/HKCU/WOW6432Node), Startup folders (user + all-users), AppX UWP startup tasks (Claude, Terminal, WhatsApp, Xbox, etc.) and scheduled tasks with Logon/Boot triggers
