@@ -8,7 +8,8 @@
 param(
     [Parameter(Mandatory = $true)] [string] $Tag,
     [string] $Exe       = 'build/bin/CodeWinOptimizer.exe',
-    [string] $AssetName = "CodeWinOptimizer-$Tag.exe"
+    [string] $AssetName = "CodeWinOptimizer-$Tag.exe",
+    [string] $Repo      = 'oscarxdev/CodeWinOptimizer-App'
 )
 
 $ErrorActionPreference = 'Stop'
@@ -24,7 +25,21 @@ $sumFile = "$AssetName.sha256"
 Write-Host "Wrote $sumFile" -ForegroundColor Green
 Write-Host "  $hash" -ForegroundColor DarkGray
 
-gh release upload $Tag $sumFile --clobber
-Write-Host "Uploaded to release $Tag" -ForegroundColor Green
+# Se sube con la API usando 'Content-Type: text/plain' a proposito: con
+# 'gh release upload' GitHub lo publica como application/octet-stream, y
+# entonces Invoke-WebRequest en el instalador devuelve un byte[] en lugar de
+# texto (rompia la verificacion del SHA256).
+$releaseId = gh api "repos/$Repo/releases/tags/$Tag" --jq '.id'
+if (-not $releaseId) { throw "Release '$Tag' no encontrada en $Repo." }
+
+$existingId = gh api "repos/$Repo/releases/$releaseId/assets" --jq ('.[] | select(.name == "' + $sumFile + '") | .id')
+if ($existingId) {
+    gh api --method DELETE "repos/$Repo/releases/assets/$existingId" | Out-Null
+}
+
+# Ojo: el upload de assets tiene que ir contra uploads.github.com (contra
+# api.github.com devuelve 404).
+gh api --method POST -H 'Content-Type: text/plain' "https://uploads.github.com/repos/$Repo/releases/$releaseId/assets?name=$sumFile" --input $sumFile | Out-Null
+Write-Host "Uploaded $sumFile to release $Tag as text/plain" -ForegroundColor Green
 
 Remove-Item $sumFile -Force

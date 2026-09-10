@@ -13,17 +13,29 @@ Write-Host '  CodeWinOptimizer' -ForegroundColor Cyan
 Write-Host '  https://codewinoptimizer.com' -ForegroundColor DarkGray
 Write-Host ''
 
+# GitHub sirve los assets como application/octet-stream, asi que
+# Invoke-WebRequest devuelve un byte[] en lugar de texto. Hacer -split sobre
+# un byte[] lo convierte en "99 57 102 ..." (codigos ASCII), por eso hay que
+# decodificarlo antes de leer el hash.
+function ConvertTo-Text {
+    param($Content)
+    if ($null -eq $Content) { return '' }
+    if ($Content -is [byte[]]) { return [Text.Encoding]::UTF8.GetString($Content) }
+    return [string]$Content
+}
+
 function Get-ExpectedHash {
     param($Release, $AssetName)
     $perAsset = $Release.assets | Where-Object { $_.name -ieq "$AssetName.sha256" } | Select-Object -First 1
     if ($perAsset) {
-        $raw = (Invoke-WebRequest -Uri $perAsset.browser_download_url -UseBasicParsing).Content
-        return ($raw -split '\s+')[0].Trim().ToLowerInvariant()
+        $raw = ConvertTo-Text (Invoke-WebRequest -Uri $perAsset.browser_download_url -UseBasicParsing).Content
+        $hash = $raw -split '\s+' | Where-Object { $_ } | Select-Object -First 1
+        if ($hash) { return $hash.Trim().ToLowerInvariant() }
     }
     $sums = $Release.assets | Where-Object { $_.name -ieq 'SHA256SUMS' -or $_.name -ieq 'sha256sums.txt' } | Select-Object -First 1
     if ($sums) {
-        $raw = (Invoke-WebRequest -Uri $sums.browser_download_url -UseBasicParsing).Content
-        foreach ($line in $raw -split "`n") {
+        $raw = ConvertTo-Text (Invoke-WebRequest -Uri $sums.browser_download_url -UseBasicParsing).Content
+        foreach ($line in $raw -split "`r?`n") {
             $parts = $line.Trim() -split '\s+'
             if ($parts.Length -ge 2 -and ($parts[-1].TrimStart('*')) -ieq $AssetName) {
                 return $parts[0].ToLowerInvariant()
@@ -45,6 +57,10 @@ try {
     Invoke-WebRequest -Uri $asset.browser_download_url -OutFile $dest -UseBasicParsing
 
     $expected = Get-ExpectedHash -Release $release -AssetName $asset.name
+    if ($expected -and $expected -notmatch '^[0-9a-f]{64}$') {
+        Write-Host "> Checksum: formato invalido ('$expected'), se omite la verificacion" -ForegroundColor Yellow
+        $expected = $null
+    }
     if ($expected) {
         Write-Host '> Verificando SHA256...' -ForegroundColor DarkCyan
         $actual = (Get-FileHash -Path $dest -Algorithm SHA256).Hash.ToLowerInvariant()
