@@ -34,25 +34,25 @@ Prefer a manual download? Grab the `.exe` from the [latest release](https://gith
 
 <details><summary>Click to expand</summary>
 
-| Restore                          | Apps                          |
-| -------------------------------- | ----------------------------- |
-| ![Restore](docs/preview/1.png)   | ![Apps](docs/preview/2.png)   |
+| Restore                        | Apps                        |
+| ------------------------------ | --------------------------- |
+| ![Restore](docs/preview/1.png) | ![Apps](docs/preview/2.png) |
 
-| Tweaks                           | Features                      |
-| -------------------------------- | ----------------------------- |
-| ![Tweaks](docs/preview/3.png)    | ![Features](docs/preview/4.png) |
+| Tweaks                        | Features                        |
+| ----------------------------- | ------------------------------- |
+| ![Tweaks](docs/preview/3.png) | ![Features](docs/preview/4.png) |
 
-| Monitor                          | Cleanup                       |
-| -------------------------------- | ----------------------------- |
-| ![Monitor](docs/preview/5.png)   | ![Cleanup](docs/preview/6.png) |
+| Monitor                        | Cleanup                        |
+| ------------------------------ | ------------------------------ |
+| ![Monitor](docs/preview/5.png) | ![Cleanup](docs/preview/6.png) |
 
-| Updates                          | Settings                      |
-| -------------------------------- | ----------------------------- |
-| ![Updates](docs/preview/7.png)   | ![Settings](docs/preview/8.png) |
+| Updates                        | Settings                        |
+| ------------------------------ | ------------------------------- |
+| ![Updates](docs/preview/7.png) | ![Settings](docs/preview/8.png) |
 
-| Startup Manager                  |                               |
-| -------------------------------- | ----------------------------- |
-| ![Startup](docs/preview/9.png)   |                               |
+| Startup Manager                |     |
+| ------------------------------ | --- |
+| ![Startup](docs/preview/9.png) |     |
 
 </details>
 

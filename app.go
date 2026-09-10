@@ -968,10 +968,10 @@ if ($cpuTemp -gt 0) {
 
 func (a *App) GetHealthScore() string {
 	type HealthResult struct {
-		Score       int               `json:"score"`
-		Grade       string            `json:"grade"`
-		Breakdown   map[string]int    `json:"breakdown"`
-		Tips        []string          `json:"tips"`
+		Score     int            `json:"score"`
+		Grade     string         `json:"grade"`
+		Breakdown map[string]int `json:"breakdown"`
+		Tips      []string       `json:"tips"`
 	}
 
 	score := 100
